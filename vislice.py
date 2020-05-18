@@ -21,6 +21,5 @@ def pokazi_igro(id_igre):
 
 
 
-
 bottle.run(reloader=True, debug=True)
 
