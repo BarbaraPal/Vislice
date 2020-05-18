@@ -8,14 +8,26 @@ vislice = model.Vislice()
 def index():
     return bottle.template('./views/index.tpl')
 
+@bottle.post('/igra/')
+def nova_igra():
+    id_nove_igre = vislice.nova_igra()
+    bottle.redirect(f"/igra/{id_nove_igre}/")
 
-@bottle.get('igra/<id_igre:int>')
+@bottle.get('/igra/<id_igre:int>')
 def pokazi_igro(id_igre):
     igra, poskus = vislice.igre[id_igre]
 
     return bottle.template('./views/igra.tpl',
-                    igra=igra, poskus=poskus)
+                    igra=igra, poskus=poskus, id_igre=id_igre)
 
+@bottle.post('/igra/<id_igre:int>/')
+def ugibaj(id_igre):
+    # Dobim crko
+    crka = bottle.request.form.getunicode('crka')
+
+    vislice.ugibaj(id_crke, crka)
+
+    bottle.redirect(f'/igra/{id_igre}/')
 
 
 
