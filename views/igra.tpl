@@ -12,20 +12,19 @@
 
   <h2> {{ igra.pravilni_del_gesla() }} </h2>
 
-  <h2> Napačnih ugibov: {{ igra.nepravilni_ugibi()}} </h2>
+  <h2> Napačnih ugibov: {{ igra.nepravilni_ugibi() }} </h2>
+ % if poskus == 'W':
+   <h1> ZMAGAL SI </h1>
+ % elif poskus == 'X':
+   <h1> IZGUBIL SI </h1>
+ % else:
 
-  % if poskus == "Z":
-    <h1> ZMAGAL SI </h1>
-  % elif poskus == "X":
-    <h1> Izgubil si </h1>
-
-
- <form action="/igra/" method="post">
-    Črka: input type="text" name="crka"
+  <form action="/igra/{{id_igre}}/" method="post">
+    Črka: <input type="text" name='crka'>
     <button type="submit">Ugibaj novo črko</button>
   </form>
 
-  % end
+ % end
 
   <img src="img/10.jpg" alt="obesanje">
 
