@@ -14,7 +14,7 @@ ZMAGA = 'W'
 PORAZ = 'X'
 
 bazen_besed = []
-with open('besede.txt', encoding='utf-8') as datoteka_bazena:
+with open('Vislice/besede.txt', encoding='utf-8') as datoteka_bazena:
     for beseda in datoteka_bazena:
         bazen_besed.append(beseda.strip().lower())
 
@@ -82,37 +82,28 @@ class Igra:
                 return NAPACNA_CRKA
 
 class Vislice:
-    def __init__(self,): #slovar, ki ID-ju priredi objekt njegove igre
-        self.igre = {}  #int -> Igra
+    """
+    Skrbi za trenutno stanje več iger (imel bo več objektov tipa Igra)
+    """
+    def __init__(self):
+        # Slovar, ki ID-ju priredi objekt njegove igre
+        self.igre = {}  # int -> (Igra, stanje)
 
-    def prosti_od_igre(self):
+    def prosti_ID_igre(self):
         """Vrne nek id, ki ga ne uporablja nobena igra"""
 
         if len(self.igre) == 0:
             return 0
         else:
             return max(self.igre.keys()) + 1
-            # return len(self.igre.keys())
     
     def nova_igra(self):
-        
-        # dobimo svež id
-
-        nov_id = self.prosti_id_igre()
-        # naredimo novo igro
-
+        nov_id = self.prosti_ID_igre()
         sveza_igra = nova_igra()
-        # vse to shranimo v self.igre
-
         self.igre[nov_id] = (sveza_igra, ZACETEK)
-
-        # vrnemo nov id
-
         return nov_id
 
-    def ugibaj(self, id_crke, crka):
-        # dobimo staro igro ven
-        trenutna_igra, _ = self.igre[id_igre]
-
-        # zapišemo posodobljeno stanje in igro nazaj v "BAZO"
+    def ugibaj(self, id_igre, crka):
+        trenutna_igra,_ = self.igre[id_igre]
+        novo_stanje = trenutna_igra.ugibaj(crka)
         self.igre[id_igre] = (trenutna_igra, novo_stanje)
