@@ -1,5 +1,7 @@
 import random
 
+import json
+
 STEVILO_DOVOLJENIH_NAPAK = 10
 
 ZACETEK = 'Z'
@@ -14,7 +16,7 @@ ZMAGA = 'W'
 PORAZ = 'X'
 
 bazen_besed = []
-with open('Vislice/besede.txt', encoding='utf-8') as datoteka_bazena:
+with open('besede.txt', encoding='utf-8') as datoteka_bazena:
     for beseda in datoteka_bazena:
         bazen_besed.append(beseda.strip().lower())
 
@@ -98,12 +100,41 @@ class Vislice:
             return max(self.igre.keys()) + 1
     
     def nova_igra(self):
+        self.preberi_iz_datoteke()
         nov_id = self.prosti_ID_igre()
         sveza_igra = nova_igra()
         self.igre[nov_id] = (sveza_igra, ZACETEK)
+        self.shrani_v_datoteko()
         return nov_id
 
     def ugibaj(self, id_igre, crka):
+        self.preberi_iz_datoteke()
         trenutna_igra,_ = self.igre[id_igre]
         novo_stanje = trenutna_igra.ugibaj(crka)
         self.igre[id_igre] = (trenutna_igra, novo_stanje)
+        self.shrani_v_datoteko()
+
+    def shrani_v_datoteko(self):
+        {id_igre : ((geslo, ugibane_crke), novo_stanje)}
+
+        igre = {}
+
+        for id_igre, (igra, stanje) in self.igre.items:
+            igre[id_igre] = ((igra.geslo, igra.crke), stanje)
+
+        # zapisano drugače
+        # for id_igre, igra in self.igre.items:
+        #    igre[id_igre] = ((igra[0].geslo, igra[0].crke), igra[1])
+
+        with open("stanje_iger.json", "w") as out_file:
+            json.dump(igre, out_file)
+
+    def preberi_iz_datoteke(self):
+        with open("stanje_iger.json", "r") as in_file:
+            igre = json.load(in_file)
+
+        self.igre = {}
+
+        for id_igre ,((geslo, crke), stanje) in igre.items():
+            (geslo, crke), stanje = igre[id_igre]
+            self.igre[int(id_igre)] = Igra(geslo, crke), stanje
